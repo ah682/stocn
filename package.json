@@ -1,0 +1,15 @@
+{
+  "name": "sto-shareholder-showcase",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Self-contained static recreation of the STO corporate homepage for shareholder demonstrations.",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "check": "node scripts/validate-static.mjs"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3"
+  }
+}

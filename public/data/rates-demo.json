@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "currency": "CNY",
+  "notice": "Illustrative rates only. These values are not customer quotations.",
+  "bands": {
+    "sameRegion": { "firstKg": 10, "additionalKg": 2 },
+    "standard": { "firstKg": 12, "additionalKg": 4 },
+    "remoteDemo": { "firstKg": 20, "additionalKg": 8 }
+  }
+}

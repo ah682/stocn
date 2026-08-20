@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "slug": "customer-notice-2026",
+      "title": "告客户书",
+      "summary": "为遏制年底电信诈骗等犯罪活动对人民权益和快递行业带来的损害，特向您发送如下提醒",
+      "publishedAt": "2026-02-03",
+      "image": "assets/news-notice.png"
+    },
+    {
+      "slug": "spring-festival-assurance-2026",
+      "title": "【官宣】申通年货节保障“四件套”",
+      "summary": "年货发申通，马到又成功！",
+      "publishedAt": "2026-01-23",
+      "image": "assets/news-festival.webp"
+    },
+    {
+      "slug": "sto-danniao",
+      "title": "申通×丹鸟：终于等到你！",
+      "summary": "申通收购丹鸟",
+      "publishedAt": "2025-11-03",
+      "image": "assets/news-acquisition.png"
+    }
+  ]
+}

@@ -1,0 +1,297 @@
+openapi: 3.1.0
+info:
+  title: STO Public Website — Sanitized Interface Schema
+  version: 1.0.0
+  description: >-
+    Design-only contract for a future public website integration. No production
+    hostname, security secret, internal service name, or customer data is included.
+servers: []
+tags:
+  - name: Tracking
+  - name: Quotes
+  - name: Serviceability
+  - name: Leads
+  - name: News
+paths:
+  /v1/tracking/queries:
+    post:
+      tags: [Tracking]
+      summary: Query one or more public shipment references
+      operationId: queryTracking
+      security:
+        - publicSession: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [trackingNumbers]
+              properties:
+                trackingNumbers:
+                  type: array
+                  minItems: 1
+                  maxItems: 10
+                  uniqueItems: true
+                  items:
+                    type: string
+                    pattern: "^[0-9]{10,18}$"
+      responses:
+        "200":
+          description: Customer-safe tracking summaries
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [results]
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ShipmentSummary"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+  /v1/quotes:
+    post:
+      tags: [Quotes]
+      summary: Create a non-binding public shipping quote
+      operationId: createQuote
+      security:
+        - publicSession: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuoteRequest"
+      responses:
+        "200":
+          description: Non-binding quote
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quote"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+  /v1/serviceability:
+    post:
+      tags: [Serviceability]
+      summary: Check whether a public destination is serviceable
+      operationId: checkServiceability
+      security:
+        - publicSession: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [countryCode, province, city]
+              properties:
+                countryCode:
+                  type: string
+                  pattern: "^[A-Z]{2}$"
+                  example: CN
+                province:
+                  type: string
+                  maxLength: 80
+                  example: 浙江省
+                city:
+                  type: string
+                  maxLength: 80
+                  example: 杭州市
+                district:
+                  type: string
+                  maxLength: 80
+      responses:
+        "200":
+          description: Serviceability result without internal routing data
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [serviceable, checkedAt]
+                properties:
+                  serviceable: { type: boolean }
+                  checkedAt: { type: string, format: date-time }
+                  customerMessage: { type: string, maxLength: 240 }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+  /v1/leads:
+    post:
+      tags: [Leads]
+      summary: Submit a consented public enquiry
+      operationId: createLead
+      security:
+        - publicSession: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [type, contactName, consent, message]
+              properties:
+                type:
+                  type: string
+                  enum: [BUSINESS, FRANCHISE, FEEDBACK]
+                contactName:
+                  type: string
+                  minLength: 1
+                  maxLength: 80
+                contactChannel:
+                  type: string
+                  maxLength: 160
+                  description: Tokenized or encrypted at the application boundary.
+                message:
+                  type: string
+                  minLength: 1
+                  maxLength: 2000
+                consent:
+                  type: boolean
+                  const: true
+      responses:
+        "202":
+          description: Enquiry accepted for asynchronous processing
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [reference, status]
+                properties:
+                  reference:
+                    type: string
+                    description: Opaque, non-sequential public reference.
+                  status:
+                    type: string
+                    const: ACCEPTED
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+  /v1/news:
+    get:
+      tags: [News]
+      summary: List already-published public news
+      operationId: listNews
+      security: []
+      parameters:
+        - name: cursor
+          in: query
+          schema: { type: string, maxLength: 256 }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 20, default: 10 }
+      responses:
+        "200":
+          description: Public news page
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/NewsItem"
+                  nextCursor:
+                    type: [string, "null"]
+components:
+  securitySchemes:
+    publicSession:
+      type: apiKey
+      in: header
+      name: X-Public-Session
+      description: >-
+        Short-lived, origin-bound anti-abuse token minted by an edge layer. This is
+        a design placeholder, not a real header value or authentication secret.
+  schemas:
+    ShipmentSummary:
+      type: object
+      additionalProperties: false
+      required: [trackingNumber, status, events]
+      properties:
+        trackingNumber:
+          type: string
+          pattern: "^[0-9]{10,18}$"
+        status:
+          type: string
+          enum: [ACCEPTED, IN_TRANSIT, OUT_FOR_DELIVERY, DELIVERED, EXCEPTION]
+        events:
+          type: array
+          maxItems: 50
+          items:
+            type: object
+            additionalProperties: false
+            required: [occurredAt, description]
+            properties:
+              occurredAt: { type: string, format: date-time }
+              description: { type: string, maxLength: 240 }
+              city: { type: string, maxLength: 80 }
+    QuoteRequest:
+      type: object
+      additionalProperties: false
+      required: [origin, destination, weightKg]
+      properties:
+        origin: { $ref: "#/components/schemas/Locality" }
+        destination: { $ref: "#/components/schemas/Locality" }
+        weightKg: { type: number, exclusiveMinimum: 0, maximum: 1000 }
+        dimensionsCm:
+          type: object
+          additionalProperties: false
+          required: [length, width, height]
+          properties:
+            length: { type: number, exclusiveMinimum: 0, maximum: 300 }
+            width: { type: number, exclusiveMinimum: 0, maximum: 300 }
+            height: { type: number, exclusiveMinimum: 0, maximum: 300 }
+    Locality:
+      type: object
+      additionalProperties: false
+      required: [countryCode, province, city]
+      properties:
+        countryCode: { type: string, pattern: "^[A-Z]{2}$" }
+        province: { type: string, maxLength: 80 }
+        city: { type: string, maxLength: 80 }
+        district: { type: string, maxLength: 80 }
+    Quote:
+      type: object
+      additionalProperties: false
+      required: [currency, amount, expiresAt, disclaimer]
+      properties:
+        currency: { type: string, const: CNY }
+        amount: { type: number, minimum: 0 }
+        expiresAt: { type: string, format: date-time }
+        disclaimer: { type: string, maxLength: 240 }
+    NewsItem:
+      type: object
+      additionalProperties: false
+      required: [slug, title, summary, publishedAt]
+      properties:
+        slug: { type: string, pattern: "^[a-z0-9-]+$" }
+        title: { type: string, maxLength: 160 }
+        summary: { type: string, maxLength: 360 }
+        publishedAt: { type: string, format: date-time }
+        imageUrl:
+          type: string
+          format: uri-reference
+          description: Public CDN or same-origin derivative only.
+  responses:
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/problem+json:
+          schema:
+            type: object
+            required: [type, title, status]
+            properties:
+              type: { type: string, format: uri-reference }
+              title: { type: string }
+              status: { type: integer, const: 400 }
+              detail: { type: string }
+    RateLimited:
+      description: Public rate limit exceeded
+      headers:
+        Retry-After:
+          schema: { type: integer, minimum: 1 }

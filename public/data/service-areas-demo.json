@@ -1,0 +1,5 @@
+{
+  "schemaVersion": 1,
+  "notice": "Small illustrative dataset; not a production coverage list.",
+  "coveredCityExamples": ["上海", "北京", "杭州", "广州", "深圳", "成都", "南京", "苏州", "武汉"]
+}

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "notice": "Synthetic demonstration data. No record originates from a production shipment system.",
+  "shipments": [
+    {
+      "trackingNumber": "773123456789012",
+      "status": "IN_TRANSIT",
+      "statusLabel": "运输中",
+      "events": [
+        {
+          "occurredAt": "2026-08-19T10:26:00+08:00",
+          "description": "快件已到达上海转运中心",
+          "city": "上海"
+        },
+        {
+          "occurredAt": "2026-08-19T03:18:00+08:00",
+          "description": "快件已由杭州转运中心发出",
+          "city": "杭州"
+        },
+        {
+          "occurredAt": "2026-08-18T18:42:00+08:00",
+          "description": "申通快递已揽收",
+          "city": "杭州"
+        }
+      ]
+    }
+  ]
+}
