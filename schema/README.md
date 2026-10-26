@@ -1,15 +1,17 @@
-# Sanitized backend contract
+# API examples
 
-This directory describes the minimum API shapes a future integration could implement. It is documentation only: the shareholder site does not call these paths, include a server hostname, or contain production credentials, identifiers, internal topology, business rules, customer records, or observability code.
+[openapi.yaml](openapi.yaml) sketches the requests and responses for a future
+backend. It contains synthetic examples and no server address. The current site
+uses local demo data and does not call these endpoints.
 
-The contract deliberately uses generic resource names and synthetic examples. Before any real implementation, the owning STO security, legal, data-governance, and platform teams should review authentication, rate limits, retention, masking, audit logging, anti-enumeration controls, and jurisdiction-specific requirements.
+## Endpoints
 
-## Intended boundaries
+- `tracking`: accept a list of tracking numbers and return shipment events.
+- `quotes`: estimate a price from origin, destination, weight and dimensions.
+- `serviceability`: check whether an area is covered.
+- `leads`: receive business, franchise or feedback enquiries with consent.
+- `news`: return published news.
 
-- `tracking`: accept a bounded list of tracking numbers and return customer-safe events.
-- `quotes`: provide a non-binding quote from origin, destination, weight, and dimensions.
-- `serviceability`: answer whether an area is serviceable without exposing internal network topology.
-- `leads`: accept business, franchise, or feedback enquiries after explicit consent.
-- `news`: provide already-published public content.
-
-The local files under `public/data/` are synthetic presentation fixtures and are not intended to seed a production database.
+The `public/data/` directory contains JSON examples for the demo. If you add a backend,
+implement authentication, input validation, rate limits and data retention alongside
+the endpoints.

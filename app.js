@@ -34,7 +34,7 @@ const actionViews = {
   fee: {
     title: '运费查询',
     content: `
-      <p class="demo-note">试算采用仓库中的公开演示费率，不代表实际报价，也不会连接计费系统。</p>
+      <p class="demo-note">试算使用演示费率。</p>
       <form class="demo-form" data-demo-form="fee">
         <div class="demo-field"><label for="fee-origin">寄件地</label><select id="fee-origin" name="origin"><option>上海</option><option>北京</option><option>浙江</option><option>广东</option><option>四川</option><option>新疆</option></select></div>
         <div class="demo-field"><label for="fee-destination">收件地</label><select id="fee-destination" name="destination"><option>浙江</option><option>上海</option><option>北京</option><option>广东</option><option>四川</option><option>新疆</option></select></div>
@@ -46,7 +46,7 @@ const actionViews = {
   range: {
     title: '服务范围查询',
     content: `
-      <p class="demo-note">此处仅演示本地数据筛选。网点与覆盖范围不会从生产系统读取。</p>
+      <p class="demo-note">输入城市或区县，查询本地示例中的服务范围。</p>
       <form class="demo-form" data-demo-form="range">
         <div class="demo-field demo-field--full"><label for="range-city">城市或区县</label><input id="range-city" name="city" placeholder="例如：上海、杭州、广州" required></div>
         <button class="demo-submit" type="submit">查询服务范围</button>
@@ -56,7 +56,7 @@ const actionViews = {
   'outlet-search': {
     title: '服务网点查询',
     content: `
-      <p class="demo-note">地图和实时网点接口已从股东演示版移除。</p>
+      <p class="demo-note">选择城市，查看示例网点。</p>
       <form class="demo-form" data-demo-form="outlet">
         <div class="demo-field demo-field--full"><label for="outlet-city">选择城市</label><select id="outlet-city" name="city"><option>上海市</option><option>北京市</option><option>杭州市</option><option>广州市</option><option>深圳市</option></select></div>
         <button class="demo-submit" type="submit">查看演示网点</button>
@@ -93,12 +93,12 @@ const actionViews = {
   },
   standards: {
     title: '快递服务标准',
-    content: `<p>展示版保留服务承诺的呈现结构，不嵌入生产规则引擎。</p><div class="info-grid"><div class="info-card"><strong>规范收寄</strong><span>实名收寄、验视和安全包装</span></div><div class="info-card"><strong>全程跟踪</strong><span>关键节点形成可追踪服务记录</span></div><div class="info-card"><strong>妥善投递</strong><span>按约定方式完成末端交付</span></div><div class="info-card"><strong>售后响应</strong><span>受理查询、投诉及理赔需求</span></div></div>`,
+    content: `<p>以下展示服务流程示例。</p><div class="info-grid"><div class="info-card"><strong>规范收寄</strong><span>实名收寄、验视和安全包装</span></div><div class="info-card"><strong>全程跟踪</strong><span>关键节点形成可追踪服务记录</span></div><div class="info-card"><strong>妥善投递</strong><span>按约定方式完成末端交付</span></div><div class="info-card"><strong>售后响应</strong><span>受理查询、投诉及理赔需求</span></div></div>`,
   },
   complaint: {
     title: '投诉建议',
     content: `
-      <p class="demo-note">本表单不会发送数据。生产客服与工单接口均未包含在本项目中。</p>
+      <p class="demo-note">填写内容仅用于本地演示，不会发送。</p>
       <form class="demo-form" data-demo-form="feedback">
         <div class="demo-field"><label for="feedback-type">反馈类型</label><select id="feedback-type"><option>服务建议</option><option>物流体验</option><option>网点服务</option></select></div>
         <div class="demo-field"><label for="feedback-contact">联系方式</label><input id="feedback-contact" autocomplete="off" placeholder="选填"></div>
@@ -108,7 +108,7 @@ const actionViews = {
   },
   'customer-service': {
     title: '客服咨询',
-    content: `<p class="demo-note">外部在线客服链接已替换为静态帮助中心，避免演示环境连接生产服务。</p><div class="info-grid"><div class="info-card"><strong>服务热线</strong><span>95543</span></div><div class="info-card"><strong>服务时间</strong><span>7 × 12 小时人工服务</span></div><div class="info-card"><strong>快件查询</strong><span>可使用首页的本地查询演示</span></div><div class="info-card"><strong>服务建议</strong><span>通过静态投诉建议表单体验流程</span></div></div><button class="demo-submit demo-submit--standalone" type="button" data-action="complaint">体验投诉建议</button>`,
+    content: `<p class="demo-note">可在此体验快件查询和意见反馈的演示流程。</p><div class="info-grid"><div class="info-card"><strong>服务热线</strong><span>95543</span></div><div class="info-card"><strong>服务时间</strong><span>7 × 12 小时人工服务</span></div><div class="info-card"><strong>快件查询</strong><span>可使用首页的本地查询演示</span></div><div class="info-card"><strong>服务建议</strong><span>通过静态投诉建议表单体验流程</span></div></div><button class="demo-submit demo-submit--standalone" type="button" data-action="complaint">体验投诉建议</button>`,
   },
   franchise: {
     title: '申请网点加盟',
@@ -223,7 +223,7 @@ function handleTracking() {
   if (values[0] !== '773123456789012') {
     openDialog({
       title: '运单查询',
-      content: `<p class="demo-note">为防止演示环境访问生产物流数据，真实运单查询已禁用。</p><p>可输入演示运单号 <strong>773123456789012</strong> 体验完整跟踪状态。</p><button class="demo-submit demo-submit--standalone" type="button" data-load-demo>载入演示运单</button>`,
+      content: `<p class="demo-note">当前查询使用本地演示数据。</p><p>可输入演示运单号 <strong>773123456789012</strong> 体验完整跟踪状态。</p><button class="demo-submit demo-submit--standalone" type="button" data-load-demo>载入演示运单</button>`,
     });
     return;
   }

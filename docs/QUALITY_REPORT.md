@@ -1,12 +1,12 @@
-# Quality report
+# Browser check notes
 
-Audit date: 2026-08-19 (Europe/London)
+Checks recorded on 2026-08-19 (Europe/London).
 
-## Visual parity
+## Layout
 
-The live public `/pc` document, styles, asset dimensions, navigation states, and visible interactions were captured and reconstructed locally. No production API or analytics request was used by the finished site.
+The layout was compared with the public STO `/pc` page, including navigation and interactive states.
 
-At a 1920 × 1080 viewport, the final build and the local reference have matching major geometry:
+At a 1920 × 1080 viewport, the recorded section positions were:
 
 | Landmark | Reference Y | Build Y | Difference |
 | --- | ---: | ---: | ---: |
@@ -20,9 +20,9 @@ At a 1920 × 1080 viewport, the final build and the local reference have matchin
 
 The desktop design intentionally retains the original 1920-based proportional system. Below 900 px, it switches to a purpose-built responsive composition because the public desktop route itself does not provide a usable mobile layout.
 
-## Browser regression matrix
+## Browser checks
 
-Production-browser checks were run at 1920 × 1080, 1440 × 900, 1024 × 768, and 390 × 844. All four passed:
+Browser checks ran at 1920 × 1080, 1440 × 900, 1024 × 768, and 390 × 844. All four passed:
 
 - zero horizontal overflow;
 - zero image failures;
@@ -39,7 +39,7 @@ Production-browser checks were run at 1920 × 1080, 1440 × 900, 1024 × 768, an
 
 ## Lighthouse
 
-The optimized production bundle scored:
+The build scored:
 
 | Category | Score |
 | --- | ---: |
@@ -50,7 +50,7 @@ The optimized production bundle scored:
 
 Measured mobile metrics included 2.1 s Largest Contentful Paint, 0 ms Total Blocking Time, 0 Cumulative Layout Shift, and approximately 729 KiB transferred. Lighthouse scores can vary by machine and runner.
 
-## Privacy and security checks
+## Network and data checks
 
 - Restrictive Content Security Policy is declared in the document.
 - Frontend source contains no `http://` or `https://` runtime URL.
@@ -58,9 +58,9 @@ Measured mobile metrics included 2.1 s Largest Contentful Paint, 0 ms Total Bloc
 - All form handling is local and ephemeral.
 - Tracking, pricing, serviceability, and location data are explicitly synthetic.
 - The documented OpenAPI file has no server hostname and no production security material.
-- `npm audit` reported zero known vulnerabilities at handoff.
+- `npm audit` reported zero known vulnerabilities on that date.
 
-## Reproduce
+## Local checks
 
 ```bash
 npm ci
